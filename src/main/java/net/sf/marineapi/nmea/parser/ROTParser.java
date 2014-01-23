@@ -1,13 +1,36 @@
+/*
+ * ROTParser.java
+ * Copyright (C) 2014 Mike Tamis, Kimmo Tuukkanen
+ *
+ * This file is part of Java Marine API.
+ * <http://ktuukkan.github.io/marine-api/>
+ *
+ * Java Marine API is free software: you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as published by the
+ * Free Software Foundation, either version 3 of the License, or (at your
+ * option) any later version.
+ *
+ * Java Marine API is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License
+ * for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Java Marine API. If not, see <http://www.gnu.org/licenses/>.
+ */
 package net.sf.marineapi.nmea.parser;
 
 import net.sf.marineapi.nmea.sentence.ROTSentence;
 import net.sf.marineapi.nmea.sentence.SentenceId;
 import net.sf.marineapi.nmea.sentence.TalkerId;
+import net.sf.marineapi.nmea.util.DataStatus;
 
 /**
- * Created by SJK on 22/01/14.
+ * ROT sentence parser.
+ *
+ * @author Mike Tamis, Kimmo Tuukkanen
  */
-public class ROTParser extends SentenceParser implements ROTSentence {
+class ROTParser extends SentenceParser implements ROTSentence {
 
     private static final int RATE_OF_TURN = 0;
     private static final int STATUS = 1;
@@ -41,15 +64,21 @@ public class ROTParser extends SentenceParser implements ROTSentence {
      * (non-Javadoc)
      * @see net.sf.marineapi.nmea.sentence.RateOfTurnSentance#getStatus()
      */
-    public boolean getStatus() {
-        return getCharValue(STATUS) == 'A';
+    public DataStatus getStatus() {
+        return DataStatus.valueOf(getCharValue(STATUS));
     }
 
-    public void setStatus(boolean status) {
-        setCharValue(STATUS,status ? 'A' : 'V');
+    /* (non-Javadoc)
+     * @see net.sf.marineapi.nmea.sentence.ROTSentence#setRateOfTurn(double)
+     */
+    public void setRateOfTurn(double rot) {
+        setDegreesValue(RATE_OF_TURN, rot);
     }
-
-    public void setRateOfTurn(double ROT) {
-        setDegreesValue(RATE_OF_TURN, ROT);
+    
+    /* (non-Javadoc)
+     * @see net.sf.marineapi.nmea.sentence.ROTSentence#setStatus(net.sf.marineapi.nmea.util.DataStatus)
+     */
+    public void setStatus(DataStatus status) {
+        setCharValue(STATUS, status.toChar());
     }
 }
